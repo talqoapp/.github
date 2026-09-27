@@ -1,0 +1,22 @@
+# Git hooks every Talqo repo shares, pulled in through lefthook `remotes`.
+# Repo-specific jobs (formatting, analysis) stay in each repo's lefthook.yml.
+
+# Resolved from the root of this repo, also when used as a remote.
+source_dir: hooks/
+
+commit-msg:
+  jobs:
+    - name: conventional commit
+      script: check-commit-msg.sh
+      runner: bash
+
+# Rule scripts run as `script` jobs because lefthook skips pre-push `run` jobs
+# when the current branch has no changes against its upstream, so
+# `git push origin feat/x:main` would go unchecked.
+pre-push:
+  piped: true
+  jobs:
+    - name: branch rules
+      script: check-push.sh
+      runner: bash
+      use_stdin: true

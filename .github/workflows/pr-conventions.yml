@@ -1,0 +1,41 @@
+# Checks a PR's title and description against the shared rules in
+# conventions/CLAUDE.md. Each repo calls it from .github/workflows/pr.yml.
+name: PR conventions
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  conventions:
+    name: Title and description
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      # The checks live in this repo, not the caller's. PRs to this repo test
+      # their own version of the checks; every other repo uses main.
+      - uses: actions/checkout@v7
+        with:
+          repository: talqoapp/.github
+          ref: ${{ github.repository == 'talqoapp/.github' && github.event.pull_request.head.sha || 'main' }}
+          sparse-checkout: |
+            hooks
+            ci
+
+      - name: Title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          printf '%s\n' "$TITLE" > "$RUNNER_TEMP/title"
+          hooks/commit-msg/check-commit-msg.sh --pr-title "$RUNNER_TEMP/title"
+
+      # Runs even when the title check fails, so both problems show at once.
+      - name: Description
+        if: ${{ !cancelled() }}
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n' "$BODY" > "$RUNNER_TEMP/body"
+          ci/check-pr-body.sh "$RUNNER_TEMP/body"

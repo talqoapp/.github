@@ -1,0 +1,3 @@
+# This repo uses the same hooks it shares with the other repos.
+extends:
+  - hooks/lefthook.yml

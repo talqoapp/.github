@@ -1,0 +1,29 @@
+# Every repo runs these rules, so a change to them is tested before it lands.
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  rules:
+    name: Hook and PR rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install lefthook
+        env:
+          LEFTHOOK_VERSION: 2.1.14
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/lefthook" \
+            "https://github.com/evilmartians/lefthook/releases/download/v$LEFTHOOK_VERSION/lefthook_${LEFTHOOK_VERSION}_Linux_x86_64"
+          chmod +x "$RUNNER_TEMP/lefthook"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - run: ./test.sh
