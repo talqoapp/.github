@@ -15,7 +15,6 @@ This repo is public: GitHub only applies an org-wide PR template from a public
 | `hooks/` | Git hooks: commit messages, branch names, no pushes to `main` | lefthook `remotes`, refetched daily |
 | `.github/workflows/pr-conventions.yml` | CI check of the PR title and description | A 10-line `pr.yml` in each repo |
 | `conventions/CLAUDE.md` | The rules, written for Claude Code | An `@` import in each repo's CLAUDE.md |
-| `repo-settings.sh` | Merge settings: squash only, PR title as the commit, delete merged branches | Run by hand, see below |
 
 ## Setup (once per machine)
 
@@ -71,14 +70,6 @@ repo.
 
 4. **PR template**: delete the repo's own `.github/pull_request_template.md`,
    so the org-wide one applies.
-
-## Repo settings
-
-GitHub settings aren't files, so they drift unless someone checks them.
-`./repo-settings.sh` compares every org repo's merge settings with the
-standard and lists the differences; `./repo-settings.sh --apply` fixes them.
-Run it after creating a repo, and now and then. It needs admin access to each
-repo and skips the ones you can't administer.
 
 ## Changing a rule
 
