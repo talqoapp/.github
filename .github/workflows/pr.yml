@@ -1,8 +1,10 @@
 name: PR
 
+# Only events that can change the title or description: pushes don't, so
+# rerunning on them would spend Actions minutes for nothing.
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
+    types: [opened, edited, reopened]
 
 permissions:
   contents: read
