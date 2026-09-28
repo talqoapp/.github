@@ -52,7 +52,7 @@ repo.
 
    on:
      pull_request:
-       types: [opened, edited, reopened, synchronize]
+       types: [opened, edited, reopened]
 
    permissions:
      contents: read
